@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เด็กชายพีรทัศน์ ศิริเจริญพันธ์ | Civil Engineering Portfolio</title>
+
+<!-- ============================================================
+     GOOGLE FONTS
+     Prompt   = หัวข้อ/ตัวเลข (Display)
+     Sarabun  = เนื้อหาอ่านง่าย (Body)
+     JetBrains Mono = ป้ายกำกับ/สเกล แบบแบบพิมพ์เขียว (Annotation)
+============================================================ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800;900&family=Sarabun:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS via CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  /* ============================================================
+     DESIGN TOKENS — ธีม "แบบพิมพ์เขียวยุคใหม่" (Modern Blueprint)
+  ============================================================ */
+  :root{
+    --blue-900:#0B2238;
+    --blue-700:#1B3A5C;
+    --blue-500:#2D5980;
+    --blue-200:#AFC6DA;
+    --grey-700:#4A4D50;
+    --grey-400:#8B8D8F;
+    --grey-200:#D8D6D0;
+    --grey-100:#EDEBE6;
+    --paper:#F7F5F0;
+    --orange:#FF6A35;
+    --orange-dark:#E0511F;
+  }
+
+  *{scroll-behavior:smooth; cursor:none;}
+  @media (max-width:768px), (pointer:coarse){ *{cursor:auto;} }
+  @media (prefers-reduced-motion: reduce){
+    *{scroll-behavior:auto; animation:none !important; transition:none !important; cursor:auto !important;}
+  }
+
+  html.locked, html.locked body{overflow:hidden; height:100%;}
+
+  body{
+    font-family:'Sarabun', sans-serif;
+    background:var(--paper);
+    color:var(--blue-900);
+    overflow-x:hidden;
+  }
+  .font-display{font-family:'Prompt', sans-serif;}
+  .font-mono{font-family:'JetBrains Mono', monospace;}
+
+  /* ---------- พื้นผิวกระดาษเกรนบางๆ ทั่วทั้งเว็บ ---------- */
+  .noise-overlay{
+    position:fixed; inset:0; z-index:70; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  }
+
+  /* ---------- PRELOADER — วาดวงเวียนแล้วเปิดม่านขึ้น ---------- */
+  /* หมายเหตุแก้บั๊ก "กล่องค้างหน้าจอ": เพิ่ม failsafe ด้วย CSS animation ตรงๆ
+     เผื่อ JavaScript ทำงานช้า/ผิดพลาด กล่องนี้จะเลื่อนหายไปเองภายใน 3.5 วินาทีเสมอ
+     และเปลี่ยนเป็น visibility:hidden + pointer-events:none กันไม่ให้บังหรือดักคลิกค้าง */
+  #preloader{
+    position:fixed; inset:0; z-index:200; background:var(--blue-900);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px;
+    transition:transform .9s cubic-bezier(.76,0,.24,1), visibility .9s;
+    animation:preloaderFailsafe .1s linear 3.5s forwards;
+    cursor:pointer;
+  }
+  #preloader.hide{ transform:translateY(-100%); visibility:hidden; pointer-events:none; }
+  @keyframes preloaderFailsafe{ to{ transform:translateY(-100%); visibility:hidden; pointer-events:none; } }
+  #preloader-skip{ font-family:'JetBrains Mono', monospace; font-size:.65rem; letter-spacing:.15em; color:var(--blue-500); margin-top:6px; }
+  #preloader .compass-ring{ transform:rotate(-90deg); }
+  #preloader .compass-arc{
+    stroke-dasharray:377; stroke-dashoffset:377;
+    animation:arcDraw 1.5s cubic-bezier(.65,0,.35,1) forwards;
+  }
+  @keyframes arcDraw{ to{ stroke-dashoffset:0; } }
+  #preloader .compass-needle{ transform-origin:60px 60px; animation:spin 1.5s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  #preload-pct{ font-variant-numeric:tabular-nums; letter-spacing:.1em; }
+
+  /* ---------- custom cursor แบบวงเวียนช่างเขียนแบบ ---------- */
+  /* หมายเหตุแก้บั๊ก: เริ่มด้วย opacity:0 จนกว่าจะขยับเมาส์ครั้งแรก
+     ป้องกันไม่ให้เห็นเป็นจุด/วงกลมค้างที่มุมซ้ายบนจอ (ตำแหน่งเริ่มต้น 0,0) ตอนหน้าเว็บเพิ่งเปิด */
+  #cursor-dot, #cursor-ring{
+    position:fixed; top:0; left:0; pointer-events:none; z-index:100; border-radius:50%; transform:translate(-50%,-50%);
+    opacity:0;
+  }
+  #cursor-dot{width:5px; height:5px; background:var(--orange); z-index:100;}
+  #cursor-ring{width:32px; height:32px; border:1px solid var(--orange); z-index:99; transition:width .2s ease, height .2s ease, opacity .2s ease;}
+  #cursor-dot.active, #cursor-ring.active{ opacity:1; }
+  @media (max-width:768px), (pointer:coarse){ #cursor-dot, #cursor-ring{display:none;} }
+
+  /* ---------- ปุ่มกลับขึ้นด้านบน (Back to Top) ---------- */
+  #back-to-top{
+    position:fixed; right:22px; bottom:22px; z-index:45; width:48px; height:48px; border-radius:50%;
+    background:var(--blue-900); border:1px solid var(--orange); color:var(--orange);
+    display:flex; align-items:center; justify-content:center; font-size:1.1rem;
+    opacity:0; transform:translateY(12px) scale(.9); pointer-events:none;
+    transition:opacity .35s ease, transform .35s ease, background .3s ease;
+  }
+  #back-to-top.show{ opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+  #back-to-top:hover{ background:var(--orange); color:#fff; }
+
+  /* ---------- แถบความคืบหน้าสไตล์ไม้บรรทัด ---------- */
+  #scroll-ruler{ position:fixed; top:64px; left:0; height:3px; width:100%; z-index:40; background:repeating-linear-gradient(90deg, var(--grey-200) 0 1px, transparent 1px 24px); }
+  #scroll-ruler-fill{ height:100%; width:0%; background:var(--orange); transition:width .1s linear; }
+
+  .blueprint-grid{
+    background-image:linear-gradient(var(--blue-200) 1px, transparent 1px), linear-gradient(90deg, var(--blue-200) 1px, transparent 1px);
+    background-size:32px 32px; background-position:center;
+  }
+  .blueprint-grid-dark{
+    background-color:var(--blue-900);
+    background-image:linear-gradient(rgba(175,198,218,0.14) 1px, transparent 1px), linear-gradient(90deg, rgba(175,198,218,0.14) 1px, transparent 1px);
+    background-size:28px 28px;
+  }
+
+  .reg-mark{position:relative;}
+  .reg-mark::before, .reg-mark::after{ content:""; position:absolute; width:16px; height:16px; border:1.5px solid var(--orange); }
+  .reg-mark::before{top:-8px; left:-8px; border-right:none; border-bottom:none;}
+  .reg-mark::after{bottom:-8px; right:-8px; border-left:none; border-top:none;}
+
+  .sheet-tag{
+    font-family:'JetBrains Mono', monospace; font-size:.72rem; letter-spacing:.12em; color:var(--orange);
+    border:1px solid var(--orange); padding:2px 10px; display:inline-block; text-transform:uppercase;
+  }
+
+  /* ---------- Hero: บรรทัดชื่อซ่อนใน mask ---------- */
+  .line-mask{overflow:hidden; display:block;}
+  .line-mask > span{ display:inline-block; transform:translateY(115%); }
+  html.loaded .line-mask > span{ animation:lineUp .9s cubic-bezier(.16,.85,.28,1) forwards; }
+  @keyframes lineUp{ to{ transform:translateY(0); } }
+
+  .hero-fade{ opacity:0; transform:translateY(14px); transition:opacity .8s ease, transform .8s ease; }
+  html.loaded .hero-fade{ opacity:1; transform:translateY(0); }
+
+  .float-chip{ animation:floaty 5s ease-in-out infinite; opacity:0; }
+  html.loaded .float-chip{ opacity:1; transition:opacity .6s ease .9s; }
+  .float-chip.f2{animation-delay:.6s;} .float-chip.f3{animation-delay:1.2s;}
+  @keyframes floaty{ 0%,100%{transform:translateY(0) rotate(var(--r,0deg));} 50%{transform:translateY(-10px) rotate(var(--r,0deg));} }
+
+  #hero-glow{
+    position:absolute; width:560px; height:560px; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,106,53,.24), transparent 70%);
+    pointer-events:none; filter:blur(12px); transform:translate(-50%,-50%);
+    left:20%; top:35%; transition:left .3s ease-out, top .3s ease-out;
+  }
+
+  .gradient-text{
+    background:linear-gradient(100deg, #ffffff, var(--blue-200) 40%, var(--orange) 65%, #ffffff);
+    background-size:300% 100%; -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:shine 7s ease-in-out infinite;
+  }
+  @keyframes shine{0%,100%{background-position:0% 50%;} 50%{background-position:100% 50%;}}
+
+  /* ---------- เส้นสะพานทรัสวาดเข้ามาเองที่พื้นหลังด้านล่าง Hero ---------- */
+
+  .truss-path{stroke-dasharray:2400; stroke-dashoffset:2400;}
+  html.loaded .truss-path{ animation:draw 2.2s cubic-bezier(.16,.85,.28,1) forwards .2s; }
+  @keyframes draw{to{stroke-dashoffset:0;}}
+
+  /* ---------- reveal + stagger (สำหรับ Section อื่นๆ) ---------- */
+  .reveal{opacity:0; transform:translateY(26px) scale(.98); filter:blur(6px);
+    transition:opacity .8s cubic-bezier(.16,.85,.28,1), transform .8s cubic-bezier(.16,.85,.28,1), filter .8s ease;}
+  .reveal.in-view{opacity:1; transform:translateY(0) scale(1); filter:blur(0);}
+  .reveal.d1{transition-delay:.08s;} .reveal.d2{transition-delay:.16s;} .reveal.d3{transition-delay:.24s;}
+  .reveal.d4{transition-delay:.32s;} .reveal.d5{transition-delay:.40s;} .reveal.d6{transition-delay:.48s;}
+  .reveal.d7{transition-delay:.56s;} .reveal.d8{transition-delay:.64s;} .reveal.d9{transition-delay:.72s;} .reveal.d10{transition-delay:.80s;}
+
+  #mobile-menu{max-height:0; overflow:hidden; transition:max-height .4s cubic-bezier(.16,.85,.28,1);}
+  #mobile-menu.open{max-height:320px;}
+
+  ::selection{background:var(--orange); color:#fff;}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--orange); outline-offset:3px;}
+
+  .nav-link{position:relative; padding-bottom:4px;}
+  .nav-link::after{content:""; position:absolute; left:0; bottom:0; width:0; height:1.5px; background:var(--orange); transition:width .3s ease;}
+  .nav-link:hover::after, .nav-link.active::after{width:100%;}
+  .nav-link.active{color:var(--orange);}
+
+  .bento{border:1px solid var(--grey-200); background:#fff; transition:transform .4s cubic-bezier(.16,.85,.28,1), box-shadow .4s ease, border-color .4s ease;}
+  .bento:hover{transform:translateY(-4px); box-shadow:0 20px 40px -20px rgba(15,42,67,.25); border-color:var(--orange);}
+
+  .tape{background:var(--blue-900); overflow:hidden; white-space:nowrap; border-top:1px solid var(--orange); border-bottom:1px solid var(--orange);}
+  .tape-track{display:inline-flex; animation:marquee 26s linear infinite;}
+  .tape-track span{font-family:'JetBrains Mono', monospace; font-size:.75rem; letter-spacing:.15em; color:var(--blue-200); padding:14px 28px; display:inline-flex; align-items:center; gap:10px;}
+  .tape-track span::before{content:"◆"; color:var(--orange); font-size:.6rem;}
+  @keyframes marquee{0%{transform:translateX(0);} 100%{transform:translateX(-50%);}}
+
+  .diagonal-divider{height:64px; margin-top:-1px; position:relative; z-index:5;}
+
+  .magnetic{display:inline-block; transition:transform .25s cubic-bezier(.16,.85,.28,1);}
+  .cta-btn{position:relative; overflow:hidden;}
+  .cta-btn::before{content:""; position:absolute; inset:0; background:linear-gradient(120deg, transparent, rgba(255,255,255,.35), transparent); transform:translateX(-120%); transition:transform .6s ease;}
+  .cta-btn:hover::before{transform:translateX(120%);}
+
+  .count-num{font-variant-numeric:tabular-nums;}
+
+  .cad-card{
+    position:relative; border:1px solid var(--grey-200); background:#fff;
+    transition:transform .25s ease, box-shadow .4s ease, border-color .4s ease;
+    transform-style:preserve-3d; will-change:transform;
+  }
+  .cad-card:hover{box-shadow:0 24px 46px -20px rgba(15,42,67,.4); border-color:var(--orange);}
+  .cad-card::before, .cad-card::after{content:""; position:absolute; width:14px; height:14px; border-color:var(--blue-700); transition:border-color .3s ease, width .3s ease, height .3s ease; z-index:2;}
+  .cad-card::before{top:-1px; left:-1px; border-top:2px solid; border-left:2px solid;}
+  .cad-card::after{bottom:-1px; right:-1px; border-bottom:2px solid; border-right:2px solid;}
+  .cad-card:hover::before, .cad-card:hover::after{border-color:var(--orange); width:20px; height:20px;}
+  .cad-card .cad-img-wrap{overflow:hidden; position:relative;}
+  .cad-card img{transition:transform .6s cubic-bezier(.16,.85,.28,1);}
+  .cad-card:hover img{transform:scale(1.1);}
+  .cad-overlay{ position:absolute; inset:0; background:linear-gradient(0deg, rgba(11,34,56,.92), rgba(11,34,56,.15) 60%); display:flex; align-items:flex-end; padding:16px; opacity:0; transition:opacity .35s ease; }
+  .cad-card:hover .cad-overlay{opacity:1;}
+</style>
+</head>
+
+<body class="antialiased">
+
+<!-- ============================================================
+     PRELOADER — วาดวงเวียนแล้วเปิดม่านขึ้นเผยหน้าเว็บ
+============================================================ -->
+<div id="preloader">
+  <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+    <circle cx="60" cy="60" r="52" stroke="#2D5980" stroke-width="1.5"/>
+    <circle class="compass-ring compass-arc" cx="60" cy="60" r="52" stroke="#FF6A35" stroke-width="2.5" stroke-linecap="round"/>
+    <g class="compass-needle">
+      <line x1="60" y1="60" x2="60" y2="18" stroke="#AFC6DA" stroke-width="2"/>
+      <circle cx="60" cy="60" r="4" fill="#FF6A35"/>
+    </g>
+  </svg>
+  <div class="font-mono text-[color:var(--blue-200)] text-xs tracking-[0.3em]">DRAFTING PORTFOLIO</div>
+  <div id="preload-pct" class="font-display font-bold text-3xl text-white">0%</div>
+  <div id="preloader-skip">แตะเพื่อข้าม / TAP TO SKIP</div>
+</div>
+
+<!-- พื้นผิวเกรนบางๆ ทั่วทั้งเว็บ -->
+<div class="noise-overlay"></div>
+
+<!-- custom cursor -->
+<div id="cursor-ring"></div>
+<div id="cursor-dot"></div>
+
+<!-- ปุ่มกลับขึ้นด้านบน -->
+<button id="back-to-top" aria-label="กลับขึ้นด้านบน">↑</button>
+
+<!-- ============================================================
+     HEADER & NAVIGATION — Sticky Navbar
+============================================================ -->
+<header id="top" class="fixed top-0 left-0 w-full z-50 bg-[color:var(--paper)]/90 backdrop-blur border-b border-[color:var(--grey-200)]">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
+
+    <a href="#top" class="flex items-center gap-3 font-display font-bold text-[color:var(--blue-900)] group">
+      <span class="w-10 h-10 flex items-center justify-center border-2 border-[color:var(--blue-700)] rounded-full text-sm font-mono transition-all duration-300 group-hover:border-[color:var(--orange)] group-hover:rotate-[20deg]">ชอ</span>
+      <span class="hidden sm:block text-sm tracking-wide">CIVIL ENGINEERING <span class="text-[color:var(--orange)]">PORTFOLIO</span></span>
+    </a>
+
+    <nav class="hidden md:flex items-center gap-8 font-mono text-sm">
+      <a href="#about" data-nav class="nav-link hover:text-[color:var(--orange)] transition-colors">01 · เกี่ยวกับ</a>
+      <a href="#skills" data-nav class="nav-link hover:text-[color:var(--orange)] transition-colors">02 · ทักษะ</a>
+      <a href="#projects" data-nav class="nav-link hover:text-[color:var(--orange)] transition-colors">03 · ผลงาน</a>
+      <a href="#contact" data-nav class="nav-link hover:text-[color:var(--orange)] transition-colors">04 · ติดต่อ</a>
+    </nav>
+
+    <button id="menu-btn" aria-label="เปิดเมนู" aria-expanded="false" class="md:hidden flex flex-col gap-1.5 p-2">
+      <span class="w-6 h-0.5 bg-[color:var(--blue-900)]"></span>
+      <span class="w-6 h-0.5 bg-[color:var(--blue-900)]"></span>
+      <span class="w-6 h-0.5 bg-[color:var(--blue-900)]"></span>
+    </button>
+  </div>
+
+  <nav id="mobile-menu" class="md:hidden font-mono text-sm border-t border-[color:var(--grey-200)] bg-[color:var(--paper)]">
+    <a href="#about" class="block px-6 py-3 border-b border-[color:var(--grey-200)]">01 · เกี่ยวกับ</a>
+    <a href="#skills" class="block px-6 py-3 border-b border-[color:var(--grey-200)]">02 · ทักษะ</a>
+    <a href="#projects" class="block px-6 py-3 border-b border-[color:var(--grey-200)]">03 · ผลงาน</a>
+    <a href="#contact" class="block px-6 py-3">04 · ติดต่อ</a>
+  </nav>
+</header>
+
+<div id="scroll-ruler"><div id="scroll-ruler-fill"></div></div>
+
+<!-- ============================================================
+     HERO SECTION — SHEET A-00 / COVER
+============================================================ -->
+<section id="hero" class="relative min-h-screen flex items-center blueprint-grid-dark pt-16 overflow-hidden">
+
+  <div id="hero-glow"></div>
+
+  <span class="float-chip f1 hidden lg:block absolute top-[20%] left-[8%] sheet-tag" style="--r:-4deg;">ΣF = 0</span>
+  <span class="float-chip f2 hidden lg:block absolute top-[70%] left-[12%] sheet-tag" style="--r:3deg;">L = 6.00 m</span>
+  <span class="float-chip f3 hidden lg:block absolute top-[45%] right-[6%] sheet-tag" style="--r:-2deg;">GRADE M.4</span>
+
+  <div class="max-w-6xl mx-auto px-5 md:px-8 w-full relative z-10 grid md:grid-cols-[1.15fr_0.85fr] gap-12 items-center">
+
+    <div>
+      <span class="sheet-tag hero-fade">SHEET A-00 / COVER</span>
+      <h1 class="gradient-text font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-tight mt-6">
+        <span class="line-mask"><span>เด็กชายพีรทัศน์</span></span>
+        <span class="line-mask"><span>ศิริเจริญพันธ์</span></span>
+      </h1>
+      <p class="font-mono text-[color:var(--orange)] tracking-widest text-sm sm:text-base mt-4 hero-fade" style="transition-delay:.15s;">
+        BUILDING THE FUTURE — ว่าที่นักเรียนเตรียมวิศวกรรมโยธา
+      </p>
+      <p class="text-[color:var(--blue-200)] mt-6 max-w-md leading-relaxed hero-fade" style="transition-delay:.3s;">
+        นักเรียนชั้นมัธยมศึกษาปีที่ 3 ผู้หลงใหลในโครงสร้าง สะพาน และการออกแบบเมือง
+        มุ่งมั่นสมัครเข้าศึกษาต่อแผนการเรียนเตรียมวิศวกรรมศาสตร์ ระดับชั้น ม.4
+      </p>
+      <div class="magnetic mt-8 hero-fade" style="transition-delay:.45s;">
+        <a href="#projects"
+           class="cta-btn inline-flex items-center gap-2 bg-[color:var(--orange)] hover:bg-[color:var(--orange-dark)] hover:shadow-[0_14px_28px_-10px_rgba(255,106,53,.6)] text-white font-display font-semibold px-7 py-3 transition-colors duration-300">
+          ดูผลงานของผม/หนู
+          <span aria-hidden="true" class="inline-block animate-bounce">↓</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="relative mx-auto reg-mark w-64 sm:w-72 hero-fade" style="transition-delay:.2s;">
+      <img src="https://placehold.co/480x600/1B3A5C/AFC6DA?text=PROFILE+PHOTO"
+           alt="รูปโปรไฟล์นักเรียน" class="w-full h-auto object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-500" />
+      <div class="absolute -bottom-8 left-0 right-0 text-center">
+        <span class="font-mono text-xs text-[color:var(--blue-200)]">SCALE 1:1 — STUDENT PORTRAIT</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="diagonal-divider bg-[color:var(--paper)]" style="clip-path:polygon(0 100%, 100% 0, 100% 100%);"></div>
+</section>
+
+<div class="tape">
+  <div class="tape-track">
+    <span>MATHEMATICS</span><span>PHYSICS</span><span>AUTOCAD</span><span>SKETCHUP</span><span>STRUCTURAL DESIGN</span><span>TEAMWORK</span><span>PROBLEM SOLVING</span><span>CIVIL ENGINEERING</span>
+    <span>MATHEMATICS</span><span>PHYSICS</span><span>AUTOCAD</span><span>SKETCHUP</span><span>STRUCTURAL DESIGN</span><span>TEAMWORK</span><span>PROBLEM SOLVING</span><span>CIVIL ENGINEERING</span>
+  </div>
+</div>
+
+<!-- ============================================================
+     ABOUT ME — SHEET A-01 / PROFILE (Bento Grid)
+============================================================ -->
+<section id="about" class="py-24 md:py-32 blueprint-grid relative">
+  <div class="max-w-6xl mx-auto px-5 md:px-8">
+    <div class="reg-mark inline-block mb-14 reveal">
+      <span class="sheet-tag">SHEET A-01 / PROFILE</span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-4">เกี่ยวกับผม/หนู</h2>
+    </div>
+
+    <div class="grid md:grid-cols-6 gap-5">
+      <div class="bento md:col-span-4 md:row-span-2 overflow-hidden reveal">
+        <img src="https://placehold.co/800x560/D8D6D0/1B3A5C?text=CIVIL+ENGINEERING+SKETCH"
+             alt="ภาพร่างแนวคิดงานวิศวกรรม" class="w-full h-full object-cover" />
+      </div>
+
+      <div class="bento md:col-span-2 p-6 flex flex-col justify-center items-center text-center reveal d1">
+        <div class="count-num font-display font-bold text-4xl text-[color:var(--blue-700)]" data-count="10">0</div>
+        <div class="font-mono text-[10px] tracking-widest text-[color:var(--grey-400)] mt-1">PROJECTS</div>
+      </div>
+      <div class="bento md:col-span-2 p-6 flex flex-col justify-center items-center text-center reveal d2">
+        <div class="count-num font-display font-bold text-4xl text-[color:var(--blue-700)]" data-count="5">0</div>
+        <div class="font-mono text-[10px] tracking-widest text-[color:var(--grey-400)] mt-1">AWARDS</div>
+      </div>
+
+      <div class="bento md:col-span-6 p-8 leading-relaxed text-[color:var(--grey-700)] reveal d3 space-y-4">
+        <!-- TODO: แก้ไขข้อความแนะนำตัวตรงนี้ -->
+        <p>
+          ผม/หนูชื่อ เด็กชายพีรทัศน์ ศิริเจริญพันธ์ ปัจจุบันศึกษาอยู่ชั้นมัธยมศึกษาปีที่ 3
+          มีความสนใจในวิชาคณิตศาสตร์และฟิสิกส์เป็นพิเศษ โดยเฉพาะเรื่องแรงและโครงสร้าง
+          ซึ่งเป็นแรงบันดาลใจให้อยากศึกษาต่อด้านวิศวกรรมโยธาในอนาคต
+        </p>
+        <p>
+          จุดเริ่มต้นความสนใจมาจาก [เล่าที่มาแรงบันดาลใจ เช่น การเข้าค่าย STEM
+          หรือการเห็นโครงการก่อสร้างใกล้บ้าน] ทำให้อยากเรียนรู้การออกแบบและสร้างสรรค์
+          สิ่งปลูกสร้างที่มั่นคงปลอดภัยและเป็นประโยชน์ต่อสังคม เป้าหมายในอนาคตคือการเข้าศึกษาต่อ
+          แผนการเรียนเตรียมวิศวกรรมศาสตร์ ระดับชั้น ม.4 เพื่อปูพื้นฐานสู่วิศวกรรมโยธาต่อไป
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="diagonal-divider bg-white" style="clip-path:polygon(0 0, 100% 100%, 0 100%);"></div>
+</section>
+
+<!-- ============================================================
+     SKILLS — SHEET A-02 / SPECIFICATIONS
+============================================================ -->
+<section id="skills" class="py-24 md:py-32 bg-white relative">
+  <div class="max-w-6xl mx-auto px-5 md:px-8">
+    <div class="reg-mark inline-block mb-14 reveal">
+      <span class="sheet-tag">SHEET A-02 / SPECIFICATIONS</span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-4">ทักษะและความสามารถ</h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-x-16 gap-y-12">
+      <div class="reveal d1">
+        <h3 class="font-mono text-xs tracking-widest text-[color:var(--orange)] mb-5">ACADEMIC — วิชาการ</h3>
+        <div class="space-y-6">
+          <div>
+            <div class="flex justify-between font-display text-sm mb-2"><span>คณิตศาสตร์ (Mathematics)</span><span class="font-mono text-[color:var(--grey-400)]">85%</span></div>
+            <div class="h-2 rounded-full bg-[color:var(--grey-200)] overflow-hidden"><div class="skill-fill h-full rounded-full" style="background:linear-gradient(90deg,var(--blue-500),var(--orange));" data-fill="85"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between font-display text-sm mb-2"><span>ฟิสิกส์ (Physics)</span><span class="font-mono text-[color:var(--grey-400)]">80%</span></div>
+            <div class="h-2 rounded-full bg-[color:var(--grey-200)] overflow-hidden"><div class="skill-fill h-full rounded-full" style="background:linear-gradient(90deg,var(--blue-500),var(--orange));" data-fill="80"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="reveal d2">
+        <h3 class="font-mono text-xs tracking-widest text-[color:var(--orange)] mb-5">TECHNICAL — ปฏิบัติการ</h3>
+        <div class="space-y-6">
+          <div>
+            <div class="flex justify-between font-display text-sm mb-2"><span>AutoCAD เบื้องต้น</span><span class="font-mono text-[color:var(--grey-400)]">60%</span></div>
+            <div class="h-2 rounded-full bg-[color:var(--grey-200)] overflow-hidden"><div class="skill-fill h-full rounded-full" style="background:linear-gradient(90deg,var(--blue-500),var(--orange));" data-fill="60"></div></div>
+          </div>
+          <div>
+            <div class="flex justify-between font-display text-sm mb-2"><span>SketchUp เบื้องต้น</span><span class="font-mono text-[color:var(--grey-400)]">65%</span></div>
+            <div class="h-2 rounded-full bg-[color:var(--grey-200)] overflow-hidden"><div class="skill-fill h-full rounded-full" style="background:linear-gradient(90deg,var(--blue-500),var(--orange));" data-fill="65"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="md:col-span-2 reveal d3">
+        <h3 class="font-mono text-xs tracking-widest text-[color:var(--orange)] mb-5">SOFT SKILLS</h3>
+        <div class="flex flex-wrap gap-3">
+          <span class="border border-[color:var(--blue-700)] text-[color:var(--blue-700)] font-mono text-xs px-4 py-2 transition-all duration-300 hover:bg-[color:var(--blue-700)] hover:text-white hover:-translate-y-0.5">การแก้ปัญหา (Problem Solving)</span>
+          <span class="border border-[color:var(--blue-700)] text-[color:var(--blue-700)] font-mono text-xs px-4 py-2 transition-all duration-300 hover:bg-[color:var(--blue-700)] hover:text-white hover:-translate-y-0.5">การทำงานเป็นทีม (Teamwork)</span>
+          <span class="border border-[color:var(--blue-700)] text-[color:var(--blue-700)] font-mono text-xs px-4 py-2 transition-all duration-300 hover:bg-[color:var(--blue-700)] hover:text-white hover:-translate-y-0.5">การคิดเชิงวิเคราะห์ (Analytical Thinking)</span>
+          <span class="border border-[color:var(--blue-700)] text-[color:var(--blue-700)] font-mono text-xs px-4 py-2 transition-all duration-300 hover:bg-[color:var(--blue-700)] hover:text-white hover:-translate-y-0.5">การบริหารเวลา (Time Management)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="diagonal-divider blueprint-grid" style="clip-path:polygon(0 100%, 100% 0, 100% 100%);"></div>
+</section>
+
+<!-- ============================================================
+     PROJECTS / ACTIVITIES — SHEET A-03 / PORTFOLIO
+============================================================ -->
+<section id="projects" class="py-24 md:py-32 blueprint-grid relative">
+  <div class="max-w-6xl mx-auto px-5 md:px-8">
+    <div class="reg-mark inline-block mb-14 reveal">
+      <span class="sheet-tag">SHEET A-03 / PORTFOLIO</span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-4">ผลงานและกิจกรรม</h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" id="project-grid">
+
+      <div class="cad-card reveal d1" data-tilt>
+        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/1B3A5C/FFFFFF?text=Project+01" alt="โครงงานสะพานไม้ไอติม" class="w-full h-44 object-cover" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">ออกแบบและทดสอบโครงสร้างสะพานรับน้ำหนัก เรียนรู้หลักการกระจายแรง</p></div>
+        </div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-01</span><h3 class="font-display font-semibold mt-1">โครงงานสะพานไม้ไอติม</h3></div>
+      </div>
+
+      <div class="cad-card reveal d2" data-tilt>
+        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/2D5980/FFFFFF?text=Project+02" alt="ค่าย STEM" class="w-full h-44 object-cover" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">เข้าร่วมกิจกรรมเรียนรู้หลักการวิศวกรรมโครงสร้างขั้นพื้นฐาน</p></div>
+        </div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-02</span><h3 class="font-display font-semibold mt-1">ค่าย STEM วิศวกรรมเบื้องต้น</h3></div>
+      </div>
+
+      <div class="cad-card reveal d3" data-tilt>
+        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/4A4D50/FFFFFF?text=Project+03" alt="โครงงานหุ่นยนต์" class="w-full h-44 object-cover" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">รับผิดชอบงานออกแบบโครงสร้างและกลไกของหุ่นยนต์</p></div>
+        </div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-03</span><h3 class="font-display font-semibold mt-1">การแข่งขันหุ่นยนต์โรงเรียน</h3></div>
+      </div>
+
+      <div class="cad-card reveal d4" data-tilt>
+        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/1B3A5C/FFFFFF?text=Project+04" alt="แบบจำลองอาคารจำลอง" class="w-full h-44 object-cover" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">สร้างแบบจำลองอาคารจากไม้บัลซาตามมาตราส่วน</p></div>
+        </div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-04</span><h3 class="font-display font-semibold mt-1">แบบจำลองอาคาร (Scale Model)</h3></div>
+      </div>
+
+      <div class="cad-card reveal d5" data-tilt>
+        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/2D5980/FFFFFF?text=Project+05" alt="โครงงานวิทยาศาสตร์" class="w-full h-44 object-cover" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">ทดลองเปรียบเทียบความแข็งแรงของวัสดุก่อสร้างชนิดต่างๆ</p></div>
+        </div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-05</span><h3 class="font-display font-semibold mt-1">โครงงานวิทยาศาสตร์: แรงและวัสดุ</h3></div>
+      </div>
+
+      <div class="cad-card reveal d6" data-tilt>
+        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/4A4D50/FFFFFF?text=Project+06" alt="กิจกรรมจิตอาสา" class="w-full h-44 object-cover" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">ร่วมซ่อมแซมสิ่งปลูกสร้างขนาดเล็กในชุมชนกับทีมโรงเรียน</p></div>
+        </div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-06</span><h3 class="font-display font-semibold mt-1">กิจกรรมจิตอาสาซ่อมแซมชุมชน</h3></div>
+      </div>
+
+      <div class="cad-card reveal d7" data-tilt>
+        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/1B3A5C/FFFFFF?text=Project+07" alt="การประกวดออกแบบ" class="w-full h-44 object-cover" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">ออกแบบผังเมืองจำลองที่คำนึงถึงการใช้พื้นที่และสิ่งแวดล้อม</p></div>
+        </div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-07</span><h3 class="font-display font-semibold mt-1">ประกวดออกแบบเมืองในฝัน</h3></div>
+      </div>
+
+      <div class="cad-card reveal d8" data-tilt>
+        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/2D5980/FFFFFF?text=Project+08" alt="ทัศนศึกษาไซต์ก่อสร้าง" class="w-full h-44 object-cover" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">เยี่ยมชมและเรียนรู้กระบวนการทำงานจริงในไซต์ก่อสร้าง</p></div>
+        </div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-08</span><h3 class="font-display font-semibold mt-1">ทัศนศึกษาไซต์งานก่อสร้างจริง</h3></div>
+      </div>
+
+      <div class="cad-card reveal d9" data-tilt>
+        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/4A4D50/FFFFFF?text=Project+09" alt="ชมรมคณิตศาสตร์" class="w-full h-44 object-cover" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">เป็นสมาชิกชมรมที่ฝึกโจทย์ประยุกต์ด้านแรงและโครงสร้าง</p></div>
+        </div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-09</span><h3 class="font-display font-semibold mt-1">ชมรมคณิตศาสตร์-ฟิสิกส์โรงเรียน</h3></div>
+      </div>
+
+      <div class="cad-card reveal d10" data-tilt>
+        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/1B3A5C/FFFFFF?text=Project+10" alt="รางวัลด้านวิชาการ" class="w-full h-44 object-cover" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">รวมรางวัลและเกียรติบัตรที่ได้รับตลอดช่วง ม.ต้น</p></div>
+        </div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-10</span><h3 class="font-display font-semibold mt-1">รางวัลด้านวิชาการ / กีฬา</h3></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="diagonal-divider blueprint-grid-dark" style="clip-path:polygon(0 0, 100% 100%, 0 100%);"></div>
+</section>
+
+<!-- ============================================================
+     CONTACT & FOOTER — SHEET A-04 / CONTACT INFO
+============================================================ -->
+<footer id="contact" class="blueprint-grid-dark text-white pt-16 pb-8">
+  <div class="max-w-6xl mx-auto px-5 md:px-8">
+    <div class="reg-mark inline-block mb-12 reveal">
+      <span class="sheet-tag">SHEET A-04 / CONTACT INFO</span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-4">ติดต่อผม/หนู</h2>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-10 reveal d2">
+      <div class="space-y-4 font-mono text-sm">
+        <p class="flex items-center gap-3"><span class="text-[color:var(--orange)]">EMAIL</span> student@example.com</p>
+        <p class="flex items-center gap-3"><span class="text-[color:var(--orange)]">PHONE</span> 0X-XXXX-XXXX</p>
+      </div>
+      <div class="flex gap-4 flex-wrap">
+        <a href="#" class="border border-[color:var(--blue-200)] hover:border-[color:var(--orange)] hover:text-[color:var(--orange)] hover:-translate-y-1 transition-all duration-300 font-mono text-xs px-5 py-3">GITHUB</a>
+        <a href="#" class="border border-[color:var(--blue-200)] hover:border-[color:var(--orange)] hover:text-[color:var(--orange)] hover:-translate-y-1 transition-all duration-300 font-mono text-xs px-5 py-3">LINKEDIN</a>
+        <a href="#" class="border border-[color:var(--blue-200)] hover:border-[color:var(--orange)] hover:text-[color:var(--orange)] hover:-translate-y-1 transition-all duration-300 font-mono text-xs px-5 py-3">INSTAGRAM</a>
+      </div>
+    </div>
+
+    <div class="border-t border-[color:var(--blue-500)]/40 mt-16 pt-6 text-center font-mono text-xs text-[color:var(--blue-200)]">
+      © 2026 เด็กชายพีรทัศน์ ศิริเจริญพันธ์ — Civil Engineering Student Web Portfolio
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     JAVASCRIPT — Vanilla JS เท่านั้น
+============================================================ -->
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isCoarse = window.matchMedia('(pointer: coarse)').matches;
+  const html = document.documentElement;
+
+  // ---- PRELOADER ----
+  // หมายเหตุแก้บั๊ก "กล่องค้างหน้าจอ": ครอบด้วย try/catch + ตั้ง hard-timeout สำรอง
+  // เพื่อการันตีว่ากล่อง Preloader จะถูกซ่อนเสมอ ไม่ว่าจะเกิดอะไรขึ้นกับ JS ระหว่างทาง
+  // และเพิ่มการคลิก/แตะเพื่อข้ามได้ทันที
+  const preloader = document.getElementById('preloader');
+  let preloaderDone = false;
+  function hidePreloader(){
+    if (preloaderDone) return;
+    preloaderDone = true;
+    try {
+      preloader.classList.add('hide');
+      html.classList.remove('locked');
+      html.classList.add('loaded');
+      setTimeout(() => { preloader.style.display = 'none'; }, 950);
+    } catch (err) {
+      // ถ้าเกิดปัญหาใดๆ ให้ซ่อนกล่องทันทีแบบไม่มีแอนิเมชัน กันไม่ให้ค้างบังหน้าจอ
+      preloader.style.display = 'none';
+      html.classList.remove('locked');
+    }
+  }
+
+  if (reduceMotion) {
+    hidePreloader();
+  } else {
+    try {
+      html.classList.add('locked');
+      const pct = document.getElementById('preload-pct');
+      const duration = 1500;
+      const start = performance.now();
+      function tick(now){
+        const p = Math.min((now - start) / duration, 1);
+        pct.textContent = Math.floor(p * 100) + '%';
+        if (p < 1) requestAnimationFrame(tick);
+        else { pct.textContent = '100%'; setTimeout(hidePreloader, 250); }
+      }
+      requestAnimationFrame(tick);
+    } catch (err) {
+      hidePreloader();
+    }
+    // แตะ/คลิกที่กล่อง Preloader เพื่อข้ามได้ทันที
+    preloader.addEventListener('click', hidePreloader);
+    // Hard safety timeout: ไม่ว่าอย่างไรกล่องนี้ต้องหายไปภายใน 3 วินาที
+    setTimeout(hidePreloader, 3000);
+  }
+
+  // ---- เมนูมือถือ ----
+  const menuBtn = document.getElementById('menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  menuBtn.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', isOpen);
+  });
+  document.querySelectorAll('#mobile-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // ---- Smooth Scroll ----
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+
+  // ---- Reveal on Scroll ----
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('in-view'); revealObserver.unobserve(entry.target); }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // ---- แถบทักษะ ----
+  const skillObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.style.width = entry.target.dataset.fill + '%'; skillObserver.unobserve(entry.target); }
+    });
+  }, { threshold: 0.3 });
+  document.querySelectorAll('.skill-fill').forEach(el => { el.style.transition = 'width 1.3s cubic-bezier(.16,.85,.28,1)'; el.style.width='0%'; skillObserver.observe(el); });
+
+  // ---- ตัวเลขนับขึ้น ----
+  const countObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target, target = parseInt(el.dataset.count, 10), duration = 1200, start = performance.now();
+        function tick(now){
+          const progress = Math.min((now - start) / duration, 1);
+          el.textContent = Math.floor(progress * target);
+          if (progress < 1) requestAnimationFrame(tick); else el.textContent = target;
+        }
+        requestAnimationFrame(tick);
+        countObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.count-num').forEach(el => countObserver.observe(el));
+
+  // ---- ไฮไลต์เมนูตาม Section ----
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('[data-nav]');
+  const navObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id));
+      }
+    });
+  }, { threshold: 0.5, rootMargin: '-64px 0px 0px 0px' });
+  sections.forEach(sec => navObserver.observe(sec));
+
+  // ---- แถบไม้บรรทัดแสดงความคืบหน้า ----
+  const rulerFill = document.getElementById('scroll-ruler-fill');
+  window.addEventListener('scroll', () => {
+    const h = document.documentElement;
+    const p = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+    rulerFill.style.width = p + '%';
+  });
+
+  // ---- ปุ่มกลับขึ้นด้านบน ----
+  const backToTop = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    backToTop.classList.toggle('show', window.scrollY > window.innerHeight * 0.8);
+  });
+  backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+  if (!reduceMotion && !isCoarse) {
+    const dot = document.getElementById('cursor-dot');
+    const ring = document.getElementById('cursor-ring');
+    let ringX = 0, ringY = 0, cursorRevealed = false;
+    window.addEventListener('mousemove', (e) => {
+      if (!cursorRevealed) { cursorRevealed = true; dot.classList.add('active'); ring.classList.add('active'); }
+      dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+      ringX += (e.clientX - ringX) * 0.18; ringY += (e.clientY - ringY) * 0.18;
+    });
+    function loopRing(){ ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px'; requestAnimationFrame(loopRing); }
+    loopRing();
+
+    document.querySelectorAll('a, button, .cad-card').forEach(el => {
+      el.addEventListener('mouseenter', () => { ring.style.width='48px'; ring.style.height='48px'; ring.style.opacity='.6'; });
+      el.addEventListener('mouseleave', () => { ring.style.width='32px'; ring.style.height='32px'; ring.style.opacity='1'; });
+    });
+
+    const hero = document.getElementById('hero');
+    const glow = document.getElementById('hero-glow');
+    hero.addEventListener('mousemove', (e) => {
+      const rect = hero.getBoundingClientRect();
+      glow.style.left = (e.clientX - rect.left) + 'px';
+      glow.style.top = (e.clientY - rect.top) + 'px';
+    });
+
+    document.querySelectorAll('.magnetic').forEach(mag => {
+      mag.addEventListener('mousemove', (e) => {
+        const rect = mag.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        mag.style.transform = `translate(${x * 0.25}px, ${y * 0.4}px)`;
+      });
+      mag.addEventListener('mouseleave', () => { mag.style.transform = 'translate(0,0)'; });
+    });
+
+    document.querySelectorAll('[data-tilt]').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `perspective(700px) rotateX(${y * -8}deg) rotateY(${x * 8}deg) translateY(-4px)`;
+      });
+      card.addEventListener('mouseleave', () => { card.style.transform = 'perspective(700px) rotateX(0) rotateY(0) translateY(0)'; });
+    });
+  }
+</script>
+
+</body>
+</html>
