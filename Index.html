@@ -215,10 +215,100 @@
   .cad-card:hover img{transform:scale(1.1);}
   .cad-overlay{ position:absolute; inset:0; background:linear-gradient(0deg, rgba(11,34,56,.92), rgba(11,34,56,.15) 60%); display:flex; align-items:flex-end; padding:16px; opacity:0; transition:opacity .35s ease; }
   .cad-card:hover .cad-overlay{opacity:1;}
+  /* ---------- ลิงก์ข้ามไปเนื้อหาหลัก (Accessibility) ---------- */
+  #skip-link{
+    position:fixed; top:-60px; left:12px; z-index:300; background:var(--orange); color:#fff;
+    font-family:'JetBrains Mono', monospace; font-size:.8rem; padding:10px 16px; transition:top .25s ease;
+  }
+  #skip-link:focus{ top:12px; }
+
+  /* ---------- นาฬิกาสถานะระบบในเนวบาร์ ---------- */
+  #status-clock{font-family:'JetBrains Mono', monospace; font-size:.68rem; letter-spacing:.1em; color:var(--grey-400);}
+  #status-clock .dot{display:inline-block; width:6px; height:6px; border-radius:50%; background:#3DDC84; margin-right:6px; animation:pulseDot 1.6s ease-in-out infinite;}
+  @keyframes pulseDot{0%,100%{opacity:1;} 50%{opacity:.3;}}
+
+  /* ---------- ปุ่มพิมพ์/บันทึกเป็น PDF ---------- */
+  #print-btn{
+    font-family:'JetBrains Mono', monospace; font-size:.68rem; letter-spacing:.1em;
+    border:1px solid var(--blue-700); color:var(--blue-700); padding:6px 12px;
+    display:inline-flex; align-items:center; gap:6px; transition:all .25s ease;
+  }
+  #print-btn:hover{ background:var(--blue-700); color:#fff; }
+
+  /* ---------- ดัชนีแผ่นแบบด้านข้าง (Sheet Index) ---------- */
+  #sheet-index{ position:fixed; right:22px; top:50%; transform:translateY(-50%); z-index:45; flex-direction:column; gap:14px; }
+  #sheet-index a{
+    width:10px; height:10px; border-radius:50%; border:1.5px solid var(--blue-500); display:block; position:relative;
+    transition:background .25s ease, border-color .25s ease, transform .25s ease;
+  }
+  #sheet-index a.active{ background:var(--orange); border-color:var(--orange); transform:scale(1.3); }
+  #sheet-index a::before{
+    content:attr(data-label); position:absolute; right:20px; top:50%; transform:translateY(-50%);
+    font-family:'JetBrains Mono', monospace; font-size:.65rem; letter-spacing:.08em; color:var(--blue-900);
+    background:var(--paper); border:1px solid var(--grey-200); padding:3px 8px; white-space:nowrap;
+    opacity:0; pointer-events:none; transition:opacity .2s ease;
+  }
+  #sheet-index a:hover::before{ opacity:1; }
+
+  /* ---------- ป้ายเกียรติบัตร/รางวัล ---------- */
+  .badge-chip{
+    display:flex; align-items:center; gap:10px; border:1px solid var(--grey-200); background:#fff;
+    padding:10px 14px; transition:transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+  .badge-chip:hover{ transform:translateY(-3px); border-color:var(--orange); box-shadow:0 14px 26px -16px rgba(15,42,67,.35); }
+  .badge-chip .medal{ font-size:1.3rem; line-height:1; }
+
+  /* ---------- เส้นทางเวลา (Timeline / Roadmap) ---------- */
+  .timeline{ position:relative; padding-left:32px; }
+  .timeline::before{ content:""; position:absolute; left:5px; top:6px; bottom:6px; width:2px; background:var(--grey-200); }
+  .timeline-item{ position:relative; padding-bottom:40px; }
+  .timeline-item:last-child{ padding-bottom:0; }
+  .timeline-item::before{
+    content:""; position:absolute; left:-32px; top:4px; width:12px; height:12px; border-radius:50%;
+    background:var(--paper); border:2px solid var(--blue-500);
+  }
+  .timeline-item.is-current::before{ background:var(--orange); border-color:var(--orange); box-shadow:0 0 0 5px rgba(255,106,53,.18); }
+  .timeline-item.is-target::before{ border-style:dashed; }
+
+  /* ---------- กล่องรายละเอียดแผ่นแบบ (Title Block) ---------- */
+  .title-block{ border:1px solid var(--blue-500); font-family:'JetBrains Mono', monospace; font-size:.68rem; }
+  .title-block > div{ border-right:1px solid var(--blue-500); padding:8px 12px; }
+  .title-block > div:last-child{ border-right:none; }
+  .title-block dt{ color:var(--blue-200); letter-spacing:.1em; font-size:.6rem; }
+  .title-block dd{ color:#fff; margin-top:2px; }
+
+  /* ---------- กล่องขยายรูป (Lightbox) ---------- */
+  #lightbox{
+    position:fixed; inset:0; z-index:250; background:rgba(11,34,56,.92); backdrop-filter:blur(4px);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+    opacity:0; pointer-events:none; transition:opacity .3s ease;
+  }
+  #lightbox.open{ opacity:1; pointer-events:auto; }
+  #lightbox img{ max-width:min(90vw,720px); max-height:80vh; object-fit:contain; border:2px solid var(--orange); background:#fff; }
+  #lightbox-caption{ color:var(--blue-200); font-family:'JetBrains Mono', monospace; font-size:.75rem; text-align:center; margin-top:14px; letter-spacing:.05em; }
+  #lightbox-close{
+    position:absolute; top:22px; right:22px; width:40px; height:40px; border:1px solid var(--orange); color:var(--orange);
+    display:flex; align-items:center; justify-content:center; font-size:1.1rem; background:transparent;
+  }
+  [data-lightbox]{ cursor:zoom-in; }
+  @media (max-width:768px), (pointer:coarse){ [data-lightbox]{ cursor:pointer; } }
+
+  /* ---------- โหมดพิมพ์ / บันทึกเป็น PDF ---------- */
+  @media print{
+    #boot-loader, #preloader, #cursor-dot, #cursor-ring, #scroll-ruler, #back-to-top,
+    #sheet-index, .tape, .float-chip, .diagonal-divider, .noise-overlay, #skip-link, #lightbox { display:none !important; }
+    * { cursor:auto !important; animation:none !important; transition:none !important; }
+    body{ background:#fff; color:#000; }
+    .blueprint-grid, .blueprint-grid-dark{ background:#fff !important; color:#000 !important; }
+    .reveal{ opacity:1 !important; transform:none !important; filter:none !important; }
+    section{ page-break-inside:avoid; }
+    header{ position:static !important; }
+  }
 </style>
 </head>
 
 <body class="antialiased">
+<a href="#about" id="skip-link">ข้ามไปเนื้อหาหลัก</a>
 
 <!-- ============================================================
      PRELOADER — วาดวงเวียนแล้วเปิดม่านขึ้นเผยหน้าเว็บ
@@ -247,23 +337,38 @@
 <!-- ปุ่มกลับขึ้นด้านบน -->
 <button id="back-to-top" aria-label="กลับขึ้นด้านบน">↑</button>
 
+<!-- กล่องขยายรูป (Lightbox) -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="ขยายรูปภาพ">
+  <button id="lightbox-close" aria-label="ปิด">✕</button>
+  <div>
+    <img id="lightbox-img" src="" alt="" />
+    <div id="lightbox-caption"></div>
+  </div>
+</div>
+
 <!-- ============================================================
      HEADER & NAVIGATION — Sticky Navbar
 ============================================================ -->
 <header id="top" class="fixed top-0 left-0 w-full z-50 bg-[color:var(--paper)]/90 backdrop-blur border-b border-[color:var(--grey-200)]">
-  <div class="max-w-6xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between gap-4">
 
-    <a href="#top" class="flex items-center gap-3 font-display font-bold text-[color:var(--blue-900)] group">
+    <a href="#top" class="flex items-center gap-3 font-display font-bold text-[color:var(--blue-900)] group shrink-0">
       <span class="w-10 h-10 flex items-center justify-center border-2 border-[color:var(--blue-700)] rounded-full text-sm font-mono transition-all duration-300 group-hover:border-[color:var(--orange)] group-hover:rotate-[20deg]">ชอ</span>
       <span class="hidden sm:block text-sm tracking-wide">CIVIL ENGINEERING <span class="text-[color:var(--orange)]">PORTFOLIO</span></span>
     </a>
 
-    <nav class="hidden md:flex items-center gap-8 font-mono text-sm">
+    <nav class="hidden md:flex items-center gap-7 font-mono text-sm">
       <a href="#about" data-nav class="nav-link hover:text-[color:var(--orange)] transition-colors">01 · เกี่ยวกับ</a>
-      <a href="#skills" data-nav class="nav-link hover:text-[color:var(--orange)] transition-colors">02 · ทักษะ</a>
-      <a href="#projects" data-nav class="nav-link hover:text-[color:var(--orange)] transition-colors">03 · ผลงาน</a>
-      <a href="#contact" data-nav class="nav-link hover:text-[color:var(--orange)] transition-colors">04 · ติดต่อ</a>
+      <a href="#timeline" data-nav class="nav-link hover:text-[color:var(--orange)] transition-colors">02 · เส้นทาง</a>
+      <a href="#skills" data-nav class="nav-link hover:text-[color:var(--orange)] transition-colors">03 · ทักษะ</a>
+      <a href="#projects" data-nav class="nav-link hover:text-[color:var(--orange)] transition-colors">04 · ผลงาน</a>
+      <a href="#contact" data-nav class="nav-link hover:text-[color:var(--orange)] transition-colors">05 · ติดต่อ</a>
     </nav>
+
+    <div class="hidden lg:flex items-center gap-4 shrink-0">
+      <span id="status-clock"><span class="dot"></span><span id="status-clock-time">--:--:--</span></span>
+      <button id="print-btn" type="button" title="บันทึกพอร์ตโฟลิโอเป็น PDF">⎙ พิมพ์ / PDF</button>
+    </div>
 
     <button id="menu-btn" aria-label="เปิดเมนู" aria-expanded="false" class="md:hidden flex flex-col gap-1.5 p-2">
       <span class="w-6 h-0.5 bg-[color:var(--blue-900)]"></span>
@@ -274,11 +379,23 @@
 
   <nav id="mobile-menu" class="md:hidden font-mono text-sm border-t border-[color:var(--grey-200)] bg-[color:var(--paper)]">
     <a href="#about" class="block px-6 py-3 border-b border-[color:var(--grey-200)]">01 · เกี่ยวกับ</a>
-    <a href="#skills" class="block px-6 py-3 border-b border-[color:var(--grey-200)]">02 · ทักษะ</a>
-    <a href="#projects" class="block px-6 py-3 border-b border-[color:var(--grey-200)]">03 · ผลงาน</a>
-    <a href="#contact" class="block px-6 py-3">04 · ติดต่อ</a>
+    <a href="#timeline" class="block px-6 py-3 border-b border-[color:var(--grey-200)]">02 · เส้นทาง</a>
+    <a href="#skills" class="block px-6 py-3 border-b border-[color:var(--grey-200)]">03 · ทักษะ</a>
+    <a href="#projects" class="block px-6 py-3 border-b border-[color:var(--grey-200)]">04 · ผลงาน</a>
+    <a href="#contact" class="block px-6 py-3 border-b border-[color:var(--grey-200)]">05 · ติดต่อ</a>
+    <button id="print-btn-mobile" type="button" class="w-full text-left px-6 py-3 text-[color:var(--orange)]">⎙ พิมพ์ / บันทึกเป็น PDF</button>
   </nav>
 </header>
+
+<!-- ดัชนีแผ่นแบบด้านข้าง (คลิกเพื่อเลื่อนไปยัง Section) -->
+<nav id="sheet-index" class="hidden lg:flex">
+  <a href="#hero" data-nav-dot data-label="A-00 COVER"></a>
+  <a href="#about" data-nav-dot data-label="A-01 PROFILE"></a>
+  <a href="#timeline" data-nav-dot data-label="A-02 TIMELINE"></a>
+  <a href="#skills" data-nav-dot data-label="A-03 SPEC"></a>
+  <a href="#projects" data-nav-dot data-label="A-04 PORTFOLIO"></a>
+  <a href="#contact" data-nav-dot data-label="A-05 CONTACT"></a>
+</nav>
 
 <div id="scroll-ruler"><div id="scroll-ruler-fill"></div></div>
 
@@ -311,14 +428,14 @@
       <div class="magnetic mt-8 hero-fade" style="transition-delay:.45s;">
         <a href="#projects"
            class="cta-btn inline-flex items-center gap-2 bg-[color:var(--orange)] hover:bg-[color:var(--orange-dark)] hover:shadow-[0_14px_28px_-10px_rgba(255,106,53,.6)] text-white font-display font-semibold px-7 py-3 transition-colors duration-300">
-          ดูผลงานของผม/หนู
+          ดูผลงานของผม
           <span aria-hidden="true" class="inline-block animate-bounce">↓</span>
         </a>
       </div>
     </div>
 
     <div class="relative mx-auto reg-mark w-64 sm:w-72 hero-fade" style="transition-delay:.2s;">
-      <img src="https://placehold.co/480x600/1B3A5C/AFC6DA?text=PROFILE+PHOTO"
+      <img src="IMG/me.jpg"
            alt="รูปโปรไฟล์นักเรียน" class="w-full h-auto object-cover grayscale contrast-125 hover:grayscale-0 transition-all duration-500" />
       <div class="absolute -bottom-8 left-0 right-0 text-center">
         <span class="font-mono text-xs text-[color:var(--blue-200)]">SCALE 1:1 — STUDENT PORTRAIT</span>
@@ -343,13 +460,13 @@
   <div class="max-w-6xl mx-auto px-5 md:px-8">
     <div class="reg-mark inline-block mb-14 reveal">
       <span class="sheet-tag">SHEET A-01 / PROFILE</span>
-      <h2 class="font-display font-bold text-3xl md:text-4xl mt-4">เกี่ยวกับผม/หนู</h2>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-4">เกี่ยวกับผม</h2>
     </div>
 
     <div class="grid md:grid-cols-6 gap-5">
       <div class="bento md:col-span-4 md:row-span-2 overflow-hidden reveal">
-        <img src="https://placehold.co/800x560/D8D6D0/1B3A5C?text=CIVIL+ENGINEERING+SKETCH"
-             alt="ภาพร่างแนวคิดงานวิศวกรรม" class="w-full h-full object-cover" />
+        <img src="IMG/engineering-sketch.svg"
+             alt="ภาพร่างแนวคิดงานวิศวกรรม" class="w-full h-full object-cover" data-lightbox data-caption="ภาพร่างแนวคิดงานวิศวกรรมของ เด็กชายพีรทัศน์ ศิริเจริญพันธ์" />
       </div>
 
       <div class="bento md:col-span-2 p-6 flex flex-col justify-center items-center text-center reveal d1">
@@ -364,7 +481,7 @@
       <div class="bento md:col-span-6 p-8 leading-relaxed text-[color:var(--grey-700)] reveal d3 space-y-4">
         <!-- TODO: แก้ไขข้อความแนะนำตัวตรงนี้ -->
         <p>
-          ผม/หนูชื่อ เด็กชายพีรทัศน์ ศิริเจริญพันธ์ ปัจจุบันศึกษาอยู่ชั้นมัธยมศึกษาปีที่ 3
+          ผมชื่อ เด็กชายพีรทัศน์ ศิริเจริญพันธ์ ปัจจุบันศึกษาอยู่ชั้นมัธยมศึกษาปีที่ 3
           มีความสนใจในวิชาคณิตศาสตร์และฟิสิกส์เป็นพิเศษ โดยเฉพาะเรื่องแรงและโครงสร้าง
           ซึ่งเป็นแรงบันดาลใจให้อยากศึกษาต่อด้านวิศวกรรมโยธาในอนาคต
         </p>
@@ -382,12 +499,49 @@
 </section>
 
 <!-- ============================================================
-     SKILLS — SHEET A-02 / SPECIFICATIONS
+     TIMELINE / ROADMAP — SHEET A-02 / SCHEDULE
 ============================================================ -->
-<section id="skills" class="py-24 md:py-32 bg-white relative">
+<section id="timeline" class="py-24 md:py-32 bg-white relative">
+  <div class="max-w-4xl mx-auto px-5 md:px-8">
+    <div class="reg-mark inline-block mb-14 reveal">
+      <span class="sheet-tag">SHEET A-02 / SCHEDULE</span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-4">เส้นทางสู่วิศวกรโยธา</h2>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-item reveal d1">
+        <span class="font-mono text-xs text-[color:var(--orange)]">ม.1</span>
+        <h3 class="font-display font-semibold mt-1">จุดเริ่มต้นความสนใจ</h3>
+        <p class="text-sm text-[color:var(--grey-700)] mt-2 max-w-lg">เริ่มสนใจวิชาคณิตศาสตร์และการก่อสร้าง จากการสังเกตโครงการก่อสร้างรอบตัว</p>
+      </div>
+      <div class="timeline-item reveal d2">
+        <span class="font-mono text-xs text-[color:var(--orange)]">ม.2</span>
+        <h3 class="font-display font-semibold mt-1">เข้าค่าย STEM ครั้งแรก</h3>
+        <p class="text-sm text-[color:var(--grey-700)] mt-2 max-w-lg">ได้ลงมือทำโครงงานโครงสร้างเบื้องต้น จุดประกายความชอบด้านวิศวกรรม</p>
+      </div>
+      <div class="timeline-item is-current reveal d3">
+        <span class="font-mono text-xs text-[color:var(--orange)]">ม.3 (ปัจจุบัน)</span>
+        <h3 class="font-display font-semibold mt-1">พัฒนาทักษะและผลงานอย่างต่อเนื่อง</h3>
+        <p class="text-sm text-[color:var(--grey-700)] mt-2 max-w-lg">ทำโครงงาน 10 ชิ้น ฝึก AutoCAD/SketchUp เบื้องต้น และเตรียมสมัครเรียนต่อ</p>
+      </div>
+      <div class="timeline-item is-target reveal d4">
+        <span class="font-mono text-xs text-[color:var(--orange)]">ม.4 (เป้าหมาย)</span>
+        <h3 class="font-display font-semibold mt-1">แผนการเรียนเตรียมวิศวกรรมศาสตร์</h3>
+        <p class="text-sm text-[color:var(--grey-700)] mt-2 max-w-lg">ปูพื้นฐานสู่คณะวิศวกรรมศาสตร์ สาขาวิศวกรรมโยธา ในระดับอุดมศึกษาต่อไป</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="diagonal-divider blueprint-grid" style="clip-path:polygon(0 100%, 100% 0, 100% 100%);"></div>
+</section>
+
+<!-- ============================================================
+     SKILLS — SHEET A-03 / SPECIFICATIONS
+============================================================ -->
+<section id="skills" class="py-24 md:py-32 blueprint-grid relative">
   <div class="max-w-6xl mx-auto px-5 md:px-8">
     <div class="reg-mark inline-block mb-14 reveal">
-      <span class="sheet-tag">SHEET A-02 / SPECIFICATIONS</span>
+      <span class="sheet-tag">SHEET A-03 / SPECIFICATIONS</span>
       <h2 class="font-display font-bold text-3xl md:text-4xl mt-4">ทักษะและความสามารถ</h2>
     </div>
 
@@ -429,6 +583,16 @@
           <span class="border border-[color:var(--blue-700)] text-[color:var(--blue-700)] font-mono text-xs px-4 py-2 transition-all duration-300 hover:bg-[color:var(--blue-700)] hover:text-white hover:-translate-y-0.5">การบริหารเวลา (Time Management)</span>
         </div>
       </div>
+
+      <div class="md:col-span-2 reveal d4">
+        <h3 class="font-mono text-xs tracking-widest text-[color:var(--orange)] mb-5">เกียรติบัตรและรางวัลเด่น</h3>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div class="badge-chip"><span class="medal">🏅</span><span class="text-sm">รางวัลชนะเลิศ การเเข่งSTEMระดับภูมิภาค</span></div>
+          <div class="badge-chip"><span class="medal">🥈</span><span class="text-sm">รองชนะเลิศ การแข่งขันตอบปัญหาคณิตศาสตร์-ฟิสิกส์</span></div>
+          <div class="badge-chip"><span class="medal">📜</span><span class="text-sm">เกียรติบัตรเข้าร่วมค่าย STEM วิศวกรรมเบื้องต้น</span></div>
+          <div class="badge-chip"><span class="medal">🎖️</span><span class="text-sm">เกียรติบัตรนักเรียนดีเด่นด้านวิชาการ</span></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -441,80 +605,82 @@
 <section id="projects" class="py-24 md:py-32 blueprint-grid relative">
   <div class="max-w-6xl mx-auto px-5 md:px-8">
     <div class="reg-mark inline-block mb-14 reveal">
-      <span class="sheet-tag">SHEET A-03 / PORTFOLIO</span>
+      <span class="sheet-tag">SHEET A-04 / PORTFOLIO</span>
       <h2 class="font-display font-bold text-3xl md:text-4xl mt-4">ผลงานและกิจกรรม</h2>
     </div>
 
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8" id="project-grid">
 
       <div class="cad-card reveal d1" data-tilt>
-        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/1B3A5C/FFFFFF?text=Project+01" alt="โครงงานสะพานไม้ไอติม" class="w-full h-44 object-cover" />
-          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">ออกแบบและทดสอบโครงสร้างสะพานรับน้ำหนัก เรียนรู้หลักการกระจายแรง</p></div>
+        <div class="cad-img-wrap"><img src="IMG/137054.jpg" alt="'งานเเข่งSTEMสัปดาห์วิทย์ระดับภูมิภาค" class="w-full h-44 object-cover" data-lightbox data-caption="งานเเข่งSTEMสัปดาห์วิทย์ระดับภูมิภาค" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">รางวัลชนะเลิศงานเเข่งSTEMระดับภูมิภาค</p></div>
         </div>
-        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-01</span><h3 class="font-display font-semibold mt-1">โครงงานสะพานไม้ไอติม</h3></div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-01</span><h3 class="font-display font-semibold mt-1">งานเเข่งSTEMสัปดาห์วิทย์ระดับภูมิภาค</h3></div>
       </div>
 
       <div class="cad-card reveal d2" data-tilt>
-        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/2D5980/FFFFFF?text=Project+02" alt="ค่าย STEM" class="w-full h-44 object-cover" />
-          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">เข้าร่วมกิจกรรมเรียนรู้หลักการวิศวกรรมโครงสร้างขั้นพื้นฐาน</p></div>
+        <div class="cad-img-wrap"><img src="IMG/38632.jpg" alt="ค่าย STEM" class="w-full h-44 object-cover" data-lightbox data-caption="ค่าย STEM" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">รางวัลชมเชยงานเเข่งกระบวนการทางวิทยาศาสตร์สัปดาห์วิทยาศาสตร์</p></div>
         </div>
-        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-02</span><h3 class="font-display font-semibold mt-1">ค่าย STEM วิศวกรรมเบื้องต้น</h3></div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-02</span><h3 class="font-display font-semibold mt-1">งานเเข่งกระบวนการวิทยาศาสตร์สัปดาห์วิทยาศาสตร์</h3></div>
       </div>
 
       <div class="cad-card reveal d3" data-tilt>
-        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/4A4D50/FFFFFF?text=Project+03" alt="โครงงานหุ่นยนต์" class="w-full h-44 object-cover" />
-          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">รับผิดชอบงานออกแบบโครงสร้างและกลไกของหุ่นยนต์</p></div>
+        <div class="cad-img-wrap"><img src="IMG/38633.jpg" alt="โครงงานหุ่นยนต์" class="w-full h-44 object-cover" data-lightbox data-caption="โครงงานหุ่นยนต์" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">โครงงานพัฒนาสเปรย์ผสมสารสกัดหยาบจากหญ้าเเพรกเพื่อยับยั้งการเจริญเติบโตของเชื้อเเบคทีเลียบนฝาโถสุขภัณฑ์</p></div>
         </div>
-        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-03</span><h3 class="font-display font-semibold mt-1">การแข่งขันหุ่นยนต์โรงเรียน</h3></div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-03</span><h3 class="font-display font-semibold mt-1">งานประกวดโครงงานสัปดาห์วิทยาศาสตร์</h3></div>
       </div>
 
       <div class="cad-card reveal d4" data-tilt>
-        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/1B3A5C/FFFFFF?text=Project+04" alt="แบบจำลองอาคารจำลอง" class="w-full h-44 object-cover" />
-          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">สร้างแบบจำลองอาคารจากไม้บัลซาตามมาตราส่วน</p></div>
+        <div class="cad-img-wrap"><img src="IMG/137053.jpg" alt="แบบจำลองอาคารจำลอง" class="w-full h-44 object-cover" data-lightbox data-caption="แบบจำลองอาคารจำลอง" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">รางวัลรองชนะเลิศงานเเข่งพินิจวรรณคดี งานศิลปหัตถกรรมกำเเพงเพชร</p></div>
         </div>
-        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-04</span><h3 class="font-display font-semibold mt-1">แบบจำลองอาคาร (Scale Model)</h3></div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-04</span><h3 class="font-display font-semibold mt-1">งานเเข่งพินิจวรรณคดี งานศิลปหัตถกรรมกำเเพงเพชร</h3></div>
       </div>
 
       <div class="cad-card reveal d5" data-tilt>
-        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/2D5980/FFFFFF?text=Project+05" alt="โครงงานวิทยาศาสตร์" class="w-full h-44 object-cover" />
-          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">ทดลองเปรียบเทียบความแข็งแรงของวัสดุก่อสร้างชนิดต่างๆ</p></div>
+        <div class="cad-img-wrap"><img src="IMG/38638.jpg" alt="โครงงานวิทยาศาสตร์" class="w-full h-44 object-cover" data-lightbox data-caption="โครงงานวิทยาศาสตร์" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">รางวัลนักเรียนดีเด่น</p></div>
         </div>
-        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-05</span><h3 class="font-display font-semibold mt-1">โครงงานวิทยาศาสตร์: แรงและวัสดุ</h3></div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-05</span><h3 class="font-display font-semibold mt-1">รางวัลนักเรียนดีเด่น</h3></div>
       </div>
 
       <div class="cad-card reveal d6" data-tilt>
-        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/4A4D50/FFFFFF?text=Project+06" alt="กิจกรรมจิตอาสา" class="w-full h-44 object-cover" />
-          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">ร่วมซ่อมแซมสิ่งปลูกสร้างขนาดเล็กในชุมชนกับทีมโรงเรียน</p></div>
+        <div class="cad-img-wrap"><img src="IMG/137902.jpg" alt="กิจกรรมจิตอาสา" class="w-full h-44 object-cover" data-lightbox data-caption="กิจกรรมจิตอาสา" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">ร่วมพัฒนาสเปรย์สารสกัดหยาบจากหญ้าเเพรกในห้องปฏิบัติการ</p></div>
         </div>
-        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-06</span><h3 class="font-display font-semibold mt-1">กิจกรรมจิตอาสาซ่อมแซมชุมชน</h3></div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-06</span><h3 class="font-display font-semibold mt-1">ทำการทดลองทางวิทยาศาสตร์ในห้องปฏิบัติการ</h3></div>
       </div>
 
       <div class="cad-card reveal d7" data-tilt>
-        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/1B3A5C/FFFFFF?text=Project+07" alt="การประกวดออกแบบ" class="w-full h-44 object-cover" />
-          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">ออกแบบผังเมืองจำลองที่คำนึงถึงการใช้พื้นที่และสิ่งแวดล้อม</p></div>
+        <div class="cad-img-wrap"><img src="IMG/137904.jpg" alt="การประกวดออกแบบ" class="w-full h-44 object-cover" data-lightbox data-caption="การประกวดออกแบบ" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">ออกแบบโมเดลจำลองผลิตภัณฑ์ด้วยโปรเเกรม</p></div>
         </div>
-        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-07</span><h3 class="font-display font-semibold mt-1">ประกวดออกแบบเมืองในฝัน</h3></div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-07</span><h3 class="font-display font-semibold mt-1">โปเจควิชาเทคโนโลยีสารสนเทศ</h3></div>
       </div>
 
       <div class="cad-card reveal d8" data-tilt>
-        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/2D5980/FFFFFF?text=Project+08" alt="ทัศนศึกษาไซต์ก่อสร้าง" class="w-full h-44 object-cover" />
-          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">เยี่ยมชมและเรียนรู้กระบวนการทำงานจริงในไซต์ก่อสร้าง</p></div>
+        <div class="cad-img-wrap"><img src="IMG/137905.jpg" alt="ทัศนศึกษาไซต์ก่อสร้าง" class="w-full h-44 object-cover" data-lightbox data-caption="ทัศนศึกษาไซต์ก่อสร้าง" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">เยี่ยมชมพิพิธภัณฑสถานเเห่งชาติ อู่ทอง</p></div>
         </div>
-        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-08</span><h3 class="font-display font-semibold mt-1">ทัศนศึกษาไซต์งานก่อสร้างจริง</h3></div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-08</span><h3 class="font-display font-semibold mt-1">งานทัศนศึกษาศึกษาดูงาน</h3></div>
       </div>
 
       <div class="cad-card reveal d9" data-tilt>
-        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/4A4D50/FFFFFF?text=Project+09" alt="ชมรมคณิตศาสตร์" class="w-full h-44 object-cover" />
-          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">เป็นสมาชิกชมรมที่ฝึกโจทย์ประยุกต์ด้านแรงและโครงสร้าง</p></div>
+        <div class="cad-img-wrap"><img src="IMG/137906.jpg" alt="ชมรมคณิตศาสตร์" class="w-full h-44 object-cover" data-lightbox data-caption="ชมรมคณิตศาสตร์" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">รางวัลรองชนะเลิศอันดับที่2งานเเข่งตอบปัญหาศีลธรรม</p></div>
         </div>
-        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-09</span><h3 class="font-display font-semibold mt-1">ชมรมคณิตศาสตร์-ฟิสิกส์โรงเรียน</h3></div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-09</span><h3 class="font-display font-semibold mt-1">งานเเข่งตอบปัญหาศีลธรรมวัดพระศรีรัตนมหาธาตุวรมหาวิหาร</h3></div>
       </div>
 
       <div class="cad-card reveal d10" data-tilt>
-        <div class="cad-img-wrap"><img src="https://placehold.co/480x320/1B3A5C/FFFFFF?text=Project+10" alt="รางวัลด้านวิชาการ" class="w-full h-44 object-cover" />
-          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">รวมรางวัลและเกียรติบัตรที่ได้รับตลอดช่วง ม.ต้น</p></div>
+        <div class="cad-img-wrap"><img src="IMG/137055.jpg" alt="รางวัลด้านวิชาการ" class="w-full h-44 object-cover" data-lightbox data-caption="รางวัลด้านวิชาการ" />
+          <div class="cad-overlay"><p class="text-white text-xs leading-relaxed">รับบทเป็นตัวละครหลัก</p></div>
         </div>
-        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-10</span><h3 class="font-display font-semibold mt-1">รางวัลด้านวิชาการ / กีฬา</h3></div>
+        <div class="p-5"><span class="font-mono text-xs text-[color:var(--orange)]">PRJ-10</span><h3 class="font-display font-semibold mt-1">การเเสดงละครเวทีงานราตรีเเคเเสด
+
+        </h3></div>
       </div>
 
     </div>
@@ -529,14 +695,14 @@
 <footer id="contact" class="blueprint-grid-dark text-white pt-16 pb-8">
   <div class="max-w-6xl mx-auto px-5 md:px-8">
     <div class="reg-mark inline-block mb-12 reveal">
-      <span class="sheet-tag">SHEET A-04 / CONTACT INFO</span>
-      <h2 class="font-display font-bold text-3xl md:text-4xl mt-4">ติดต่อผม/หนู</h2>
+      <span class="sheet-tag">SHEET A-05 / CONTACT INFO</span>
+      <h2 class="font-display font-bold text-3xl md:text-4xl mt-4">ติดต่อผม</h2>
     </div>
 
     <div class="grid md:grid-cols-2 gap-10 reveal d2">
       <div class="space-y-4 font-mono text-sm">
-        <p class="flex items-center gap-3"><span class="text-[color:var(--orange)]">EMAIL</span> student@example.com</p>
-        <p class="flex items-center gap-3"><span class="text-[color:var(--orange)]">PHONE</span> 0X-XXXX-XXXX</p>
+        <p class="flex items-center gap-3"><span class="text-[color:var(--orange)]">EMAIL</span> peeratat.sir@pccpl.ac.th</p>
+        <p class="flex items-center gap-3"><span class="text-[color:var(--orange)]">PHONE</span> 096-195-5619</p>
       </div>
       <div class="flex gap-4 flex-wrap">
         <a href="#" class="border border-[color:var(--blue-200)] hover:border-[color:var(--orange)] hover:text-[color:var(--orange)] hover:-translate-y-1 transition-all duration-300 font-mono text-xs px-5 py-3">GITHUB</a>
@@ -545,7 +711,15 @@
       </div>
     </div>
 
-    <div class="border-t border-[color:var(--blue-500)]/40 mt-16 pt-6 text-center font-mono text-xs text-[color:var(--blue-200)]">
+    <!-- ป้ายรายละเอียดแผ่นแบบ (Title Block) สไตล์แบบก่อสร้างจริง -->
+    <div class="title-block grid grid-cols-2 sm:grid-cols-4 mt-14 reveal d3">
+      <div><dt>DRAWN BY</dt><dd>P. Sirichareonphan</dd></div>
+      <div><dt>DATE</dt><dd>2026</dd></div>
+      <div><dt>SCALE</dt><dd>NOT TO SCALE</dd></div>
+      <div><dt>SHEET</dt><dd>A-05 OF A-05</dd></div>
+    </div>
+
+    <div class="border-t border-[color:var(--blue-500)]/40 mt-8 pt-6 text-center font-mono text-xs text-[color:var(--blue-200)]">
       © 2026 เด็กชายพีรทัศน์ ศิริเจริญพันธ์ — Civil Engineering Student Web Portfolio
     </div>
   </div>
@@ -558,6 +732,46 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const isCoarse = window.matchMedia('(pointer: coarse)').matches;
   const html = document.documentElement;
+
+  // ---- นาฬิกาสถานะระบบ ----
+  const clockEl = document.getElementById('status-clock-time');
+  function updateClock(){
+    if (!clockEl) return;
+    const now = new Date();
+    const hh = String(now.getHours()).padStart(2,'0');
+    const mm = String(now.getMinutes()).padStart(2,'0');
+    const ss = String(now.getSeconds()).padStart(2,'0');
+    clockEl.textContent = `${hh}:${mm}:${ss}`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  // ---- ปุ่มพิมพ์ / บันทึกเป็น PDF ----
+  document.querySelectorAll('#print-btn, #print-btn-mobile').forEach(btn => {
+    btn.addEventListener('click', () => window.print());
+  });
+
+  // ---- กล่องขยายรูป (Lightbox) ----
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCaption = document.getElementById('lightbox-caption');
+  function openLightbox(src, caption){
+    lightboxImg.src = src;
+    lightboxImg.alt = caption || '';
+    lightboxCaption.textContent = caption || '';
+    lightbox.classList.add('open');
+    html.classList.add('locked');
+  }
+  function closeLightbox(){
+    lightbox.classList.remove('open');
+    html.classList.remove('locked');
+  }
+  document.querySelectorAll('[data-lightbox]').forEach(img => {
+    img.addEventListener('click', () => openLightbox(img.src, img.dataset.caption || img.alt));
+  });
+  document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+  window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
 
   // ---- PRELOADER ----
   // หมายเหตุแก้บั๊ก "กล่องค้างหน้าจอ": ครอบด้วย try/catch + ตั้ง hard-timeout สำรอง
@@ -660,12 +874,14 @@
   document.querySelectorAll('.count-num').forEach(el => countObserver.observe(el));
 
   // ---- ไฮไลต์เมนูตาม Section ----
-  const sections = document.querySelectorAll('section[id]');
+  const sections = document.querySelectorAll('section[id], footer[id]');
   const navLinks = document.querySelectorAll('[data-nav]');
+  const navDots = document.querySelectorAll('[data-nav-dot]');
   const navObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         navLinks.forEach(link => link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id));
+        navDots.forEach(dot => dot.classList.toggle('active', dot.getAttribute('href') === '#' + entry.target.id));
       }
     });
   }, { threshold: 0.5, rootMargin: '-64px 0px 0px 0px' });
@@ -673,10 +889,14 @@
 
   // ---- แถบไม้บรรทัดแสดงความคืบหน้า ----
   const rulerFill = document.getElementById('scroll-ruler-fill');
+  const heroEl = document.getElementById('hero');
   window.addEventListener('scroll', () => {
     const h = document.documentElement;
     const p = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
     rulerFill.style.width = p + '%';
+    if (!reduceMotion && heroEl) {
+      heroEl.style.backgroundPosition = `center ${window.scrollY * 0.15}px`;
+    }
   });
 
   // ---- ปุ่มกลับขึ้นด้านบน ----
@@ -698,7 +918,7 @@
     function loopRing(){ ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px'; requestAnimationFrame(loopRing); }
     loopRing();
 
-    document.querySelectorAll('a, button, .cad-card').forEach(el => {
+    document.querySelectorAll('a, button, .cad-card, [data-lightbox], #sheet-index a').forEach(el => {
       el.addEventListener('mouseenter', () => { ring.style.width='48px'; ring.style.height='48px'; ring.style.opacity='.6'; });
       el.addEventListener('mouseleave', () => { ring.style.width='32px'; ring.style.height='32px'; ring.style.opacity='1'; });
     });
